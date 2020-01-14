@@ -1,0 +1,30 @@
+# first create pv and pvc
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: busybox
+  name: busybox
+spec:
+  containers:
+  - args:
+    - /bin/sh
+    - -c
+    - sleep 3600
+    image: busybox
+    imagePullPolicy: IfNotPresent
+    name: busybox
+    resources: {}
+    volumeMounts: #
+    - name: myvolume #
+      mountPath: /etc/foo #
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+  volumes: #
+  - name: myvolume #
+    persistentVolumeClaim: #
+      claimName: mypvc #
+status: {}
+
+# now you can copy a file to the pvc kubectl exec busybox -it -- cp /etc/passwd /etc/foo/passwd
